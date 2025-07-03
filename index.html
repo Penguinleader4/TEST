@@ -2,113 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>16x16 Isometric Grid Map (with Heights)</title>
+  <title>Isometric Grass Grid</title>
   <style>
-    #iso-grid {
-      display: grid;
-      grid-template-columns: repeat(16, 48px);
-      grid-template-rows: repeat(16, 48px);
-      gap: 0;
-      perspective: 600px;
-      margin-top: 20px;
+    body {
+      background: #222;
+      padding: 40px;
+      font-family: sans-serif;
     }
-    .iso-cell {
+    .iso-grid {
       position: relative;
-      width: 48px;
-      height: 48px;
+      width: 700px; /* Adjust for your grid size */
+      height: 400px;
+      margin: 0 auto;
     }
-    .iso-block {
+    .stack {
       position: absolute;
-      left: 0; right: 0; bottom: 0;
-      width: 48px;
-      transform: skewY(-26.5deg) scaleY(0.866);
       display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      z-index: 1;
+      flex-direction: column-reverse;
+      align-items: center;
     }
-    .Gr  { background: #5c5c5c; border: 2px solid #444; }
-    .G   { background: #28c940; border: 2px solid #222; }
-    .R   { background: #e74c3c; border: 2px solid #922; }
-    .B   { background: #3498db; border: 2px solid #226; }
-    .Y   { background: #f9e79f; border: 2px solid #bb9; }
-    .O   { background: #f39c12; border: 2px solid #a60; }
-    .W   { background: #fff;     border: 2px solid #bbb; }
-    .K   { background: #222;     border: 2px solid #111; }
-    .P   { background: #9b59b6; border: 2px solid #515; }
-    /* Height classes (tweak as needed) */
-    .h1 { height: 12px; }
-    .h2 { height: 24px; }
-    .h3 { height: 36px; }
-    .h4 { height: 48px; }
-    .h5 { height: 60px; }
-    .h6 { height: 72px; }
-    .h7 { height: 84px; }
-    .h8 { height: 96px; }
-
-    /* Optional: label styling */
-    .iso-label {
+    .cube {
+      width: 64px;
+      height: 32px;
+      position: relative;
+      margin-bottom: -16px; /* overlap cubes for stacking */
+    }
+    /* Top face */
+    .cube .top {
       position: absolute;
-      bottom: 2px;
-      width: 100%;
-      text-align: center;
-      font-size: 10px;
-      color: #222;
-      text-shadow: 1px 1px 2px #fff, 0 0 6px #000;
-      pointer-events: none;
-      user-select: none;
+      width: 64px;
+      height: 32px;
+      background: #7cfc00;
+      transform: skewY(-30deg);
+      z-index: 3;
+      top: 0;
+      left: 0;
+      border-top: 2px solid #333;
+    }
+    /* Left face */
+    .cube .left {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: #228B22;
+      transform: skewX(30deg);
       z-index: 2;
+      left: 0;
+      top: 16px;
+      border-left: 2px solid #222;
+    }
+    /* Right face */
+    .cube .right {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: #556B2F;
+      transform: skewY(30deg);
+      z-index: 1;
+      left: 32px;
+      top: 16px;
+      border-right: 2px solid #111;
     }
   </style>
 </head>
 <body>
-  <h2>16x16 Isometric Grid Map (with Heights)</h2>
-  <div id="iso-grid"></div>
+  <h2 style="color:#fff;text-align:center;">Isometric Grass Grid</h2>
+  <div class="iso-grid" id="iso-grid"></div>
   <script>
-    // Example: use "Gr1", "B3", etc. for color and height
-    const mapArray = [
-      ["Gr1","Gr2","B1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr2","B1","Gr2","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr2","B2","Gr3","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr3","B3","Gr2","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      // ... fill out the rest of your map as needed ...
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"],
-      ["Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1","Gr1"]
-    ];
-
+    // Basic 5x5 grid with height 1 everywhere (grass)
+    const rows = 5, cols = 5;
+    const blockWidth = 64, blockHeight = 32, overlap = 16;
     const grid = document.getElementById('iso-grid');
-    for (let y = 0; y < 16; y++) {
-      for (let x = 0; x < 16; x++) {
-        const val = (mapArray[y] && mapArray[y][x]) ? mapArray[y][x] : 'Gr1';
-        // Parse color and height (e.g., "Gr3" => color: Gr, height: 3)
-        const match = val.match(/^([A-Za-z]+)(\d+)$/);
-        let color = 'Gr', height = 1;
-        if (match) {
-          color = match[1];
-          height = Math.max(1, Math.min(Number(match[2]), 8)); // Clamp height 1-8
-        }
-        const cell = document.createElement('div');
-        cell.className = 'iso-cell';
-        // Block
-        const block = document.createElement('div');
-        block.className = `iso-block ${color} h${height}`;
-        // Optional: label
-        const label = document.createElement('div');
-        label.className = 'iso-label';
-        label.textContent = val;
-        block.appendChild(label);
-        cell.appendChild(block);
-        grid.appendChild(cell);
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const stack = document.createElement('div');
+        stack.className = 'stack';
+        // Calculate isometric position
+        stack.style.left = (x - y) * (blockWidth / 2) + (cols * blockWidth / 2 - blockWidth / 2) + 'px';
+        stack.style.top = (x + y) * (blockHeight / 2) + 'px';
+
+        // Add a single grass cube (height 1)
+        const cube = document.createElement('div');
+        cube.className = 'cube';
+        cube.innerHTML = `
+          <div class="top"></div>
+          <div class="left"></div>
+          <div class="right"></div>
+        `;
+        stack.appendChild(cube);
+
+        grid.appendChild(stack);
       }
     }
   </script>
