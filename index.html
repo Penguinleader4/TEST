@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>16x16 Color Grid Map (Array Version)</title>
+  <title>16x16 Color Grid Map (Squares Only)</title>
   <style>
     #grid { display: grid; grid-template-columns: repeat(16, 24px); gap: 2px; }
     .cell {
-      width: 24px; height: 24px; text-align: center; font-weight: bold;
-      border: 1px solid #888; background: #eee; font-size: 18px;
+      width: 24px; height: 24px;
+      border: 1px solid #888; background: #eee;
+      /* Remove text alignment and font settings since no letters */
     }
     .G { background: #28c940; } /* Green */
     .R { background: #e74c3c; } /* Red */
@@ -15,12 +16,12 @@
     .Y { background: #f9e79f; } /* Yellow */
     .O { background: #f39c12; } /* Orange */
     .W { background: #fff;     } /* White */
-    .K { background: #222; color: #fff; } /* Black */
+    .K { background: #222;     } /* Black */
     .P { background: #9b59b6; } /* Purple */
   </style>
 </head>
 <body>
-  <h2>16x16 Color Grid Map (Array Version)</h2>
+  <h2>16x16 Color Grid Map (Squares Only)</h2>
   <div id="grid"></div>
   <script>
     // Example 16x16 grid array (you can change G/R/B/Y/O/W/K/P)
@@ -52,7 +53,6 @@
         const val = (mapArray[y] && mapArray[y][x]) ? mapArray[y][x] : '';
         const cell = document.createElement('div');
         cell.className = 'cell ' + (COLORS.includes(val) ? val : '');
-        cell.textContent = val;
         grid.appendChild(cell);
       }
     }
