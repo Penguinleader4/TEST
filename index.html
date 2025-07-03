@@ -1,35 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Minecraft 16x16 Chunk Viewer</title>
+  <meta charset="UTF-8">
+  <title>16x16 Color Grid Map</title>
   <style>
-    #chunk { display: grid; grid-template-columns: repeat(16, 20px); }
-    .block { width: 20px; height: 20px; border: 1px solid #aaa; text-align: center; font-size: 10px; }
+    #grid { display: grid; grid-template-columns: repeat(16, 24px); gap: 2px; }
+    .cell {
+      width: 24px; height: 24px; text-align: center; font-weight: bold;
+      border: 1px solid #888; background: #eee; font-size: 18px;
+    }
+    .G { background: #28c940; } /* Green */
+    .R { background: #e74c3c; } /* Red */
+    .B { background: #3498db; } /* Blue */
+    .Y { background: #f9e79f; } /* Yellow */
+    .O { background: #f39c12; } /* Orange */
+    .W { background: #fff;     } /* White */
+    .K { background: #222; color: #fff; } /* Black */
+    .P { background: #9b59b6; } /* Purple */
   </style>
 </head>
 <body>
-  <h1>Minecraft 16x16 Chunk Viewer</h1>
-  <textarea id="input" rows="16" cols="32" placeholder="Enter 16 lines of 16 block types (e.g. stone, grass, dirt)"></textarea>
-  <br />
-  <button onclick="renderChunk()">Show Chunk</button>
-  <div id="chunk"></div>
+  <h2>16x16 Color Grid Map</h2>
+  <div id="grid"></div>
+  <button onclick="getMap()">Export Map</button>
+  <pre id="output"></pre>
   <script>
-    function renderChunk() {
-      const input = document.getElementById('input').value.trim().split('\n');
-      const chunk = document.getElementById('chunk');
-      chunk.innerHTML = '';
-      for (let y = 0; y < 16; y++) {
-        const row = (input[y] || '').trim().split(/\s+/);
-        for (let x = 0; x < 16; x++) {
-          const blockType = row[x] || '';
-          const block = document.createElement('div');
-          block.className = 'block';
-          block.textContent = blockType;
-          block.title = blockType;
-          chunk.appendChild(block);
+    const COLORS = ['G', 'R', 'B', 'Y', 'O', 'W', 'K', 'P'];
+    const size = 16;
+
+    // Create grid
+    const grid = document.getElementById('grid');
+    for (let i = 0; i < size * size; i++) {
+      const input = document.createElement('input');
+      input.maxLength = 1;
+      input.className = 'cell';
+      input.addEventListener('input', function() {
+        const val = input.value.toUpperCase();
+        input.value = val;
+        input.className = 'cell ' + (COLORS.includes(val) ? val : '');
+      });
+      grid.appendChild(input);
+    }
+
+    // Export button: prints the grid as a 16x16 array of chars
+    function getMap() {
+      const cells = document.querySelectorAll('.cell');
+      let result = '';
+      for (let y = 0; y < size; y++) {
+        let row = [];
+        for (let x = 0; x < size; x++) {
+          const v = cells[y * size + x].value || ' ';
+          row.push(v);
         }
+        result += row.join(' ') + '\n';
       }
+      document.getElementById('output').textContent = result;
     }
   </script>
 </body>
