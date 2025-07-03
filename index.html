@@ -18,6 +18,7 @@
     .W { background: #fff;     } /* White */
     .K { background: #222;     } /* Black */
     .P { background: #9b59b6; } /* Purple */
+    .Gr { background: #8e8e8e; } /* Gray */
   </style>
 </head>
 <body>
@@ -26,22 +27,22 @@
   <script>
     // Example 16x16 grid array (you can change G/R/B/Y/O/W/K/P)
     const mapArray = [
-      ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"],
-      ["G","R","R","R","R","R","R","R","R","R","R","R","R","R","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","Y","Y","Y","Y","Y","Y","Y","Y","Y","Y","B","R","G"],
-      ["G","R","B","Y","O","O","O","O","O","O","O","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","W","W","W","W","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","K","K","K","K","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","K","P","P","K","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","K","P","P","K","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","K","K","K","K","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","W","W","W","W","W","W","O","Y","B","R","G"],
-      ["G","R","B","Y","O","O","O","O","O","O","O","O","Y","B","R","G"],
-      ["G","R","B","Y","Y","Y","Y","Y","Y","Y","Y","Y","Y","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","R","R","R","R","R","R","R","R","R","R","R","R","R","G"],
-      ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"]
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr","Gr"],
+      ["Gr","Gr","Gr","Gr","Gr","Gr","Gr","K","K","K","K","K","K","K","K","K"],
+      ["Gr","Gr","K","W","W","W","W","K","K","K","K","K","K","K","K","K"],
+      ["K","K","K","K","W","K","W","K","W","K","B","B","B","B","B","B"],
+      ["K","K","O","B","B","B","B","B","B","B","B","B","B","B","B","B"],
+      ["K","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
+      ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
+      ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
+      ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
+      ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"]
     ];
 
     // Render grid
