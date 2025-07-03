@@ -5,94 +5,82 @@
   <title>Isometric Grass Grid</title>
   <style>
     body {
-      background: #222;
-      padding: 40px;
-      font-family: sans-serif;
+      background: #232323;
+      margin: 0;
+      padding: 40px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .iso-grid {
       position: relative;
-      width: 700px; /* Adjust for your grid size */
-      height: 400px;
+      width: 480px; /* Adjust depending on grid size */
+      height: 320px;
       margin: 0 auto;
     }
-    .stack {
-      position: absolute;
-      display: flex;
-      flex-direction: column-reverse;
-      align-items: center;
-    }
     .cube {
+      position: absolute;
       width: 64px;
       height: 32px;
-      position: relative;
-      margin-bottom: -16px; /* overlap cubes for stacking */
+      transform-style: preserve-3d;
     }
     /* Top face */
     .cube .top {
       position: absolute;
       width: 64px;
       height: 32px;
-      background: #7cfc00;
+      background: #8fd94f;
       transform: skewY(-30deg);
       z-index: 3;
-      top: 0;
-      left: 0;
-      border-top: 2px solid #333;
+      top: 0; left: 0;
+      border-top: 2px solid #5c8a25;
     }
     /* Left face */
     .cube .left {
       position: absolute;
       width: 32px;
       height: 32px;
-      background: #228B22;
+      background: #4e7339;
       transform: skewX(30deg);
       z-index: 2;
-      left: 0;
-      top: 16px;
-      border-left: 2px solid #222;
+      left: 0; top: 16px;
+      border-left: 2px solid #31421b;
     }
     /* Right face */
     .cube .right {
       position: absolute;
       width: 32px;
       height: 32px;
-      background: #556B2F;
+      background: #b8e06a;
       transform: skewY(30deg);
       z-index: 1;
-      left: 32px;
-      top: 16px;
-      border-right: 2px solid #111;
+      left: 32px; top: 16px;
+      border-right: 2px solid #7fab36;
     }
   </style>
 </head>
 <body>
-  <h2 style="color:#fff;text-align:center;">Isometric Grass Grid</h2>
+  <h2 style="color:#fff;">Isometric Grass Grid</h2>
   <div class="iso-grid" id="iso-grid"></div>
   <script>
-    // Basic 5x5 grid with height 1 everywhere (grass)
+    // 5x5 grid, single height grass
     const rows = 5, cols = 5;
-    const blockWidth = 64, blockHeight = 32, overlap = 16;
+    const blockWidth = 64, blockHeight = 32;
     const grid = document.getElementById('iso-grid');
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        const stack = document.createElement('div');
-        stack.className = 'stack';
-        // Calculate isometric position
-        stack.style.left = (x - y) * (blockWidth / 2) + (cols * blockWidth / 2 - blockWidth / 2) + 'px';
-        stack.style.top = (x + y) * (blockHeight / 2) + 'px';
-
-        // Add a single grass cube (height 1)
         const cube = document.createElement('div');
         cube.className = 'cube';
+        // Isometric positioning
+        cube.style.left = (x - y) * (blockWidth / 2) + (cols * blockWidth / 2 - blockWidth / 2) + 'px';
+        cube.style.top = (x + y) * (blockHeight / 2) + 'px';
         cube.innerHTML = `
           <div class="top"></div>
           <div class="left"></div>
           <div class="right"></div>
         `;
-        stack.appendChild(cube);
-
-        grid.appendChild(stack);
+        grid.appendChild(cube);
       }
     }
   </script>
