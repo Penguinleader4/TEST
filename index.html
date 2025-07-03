@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>16x16 Color Grid Map</title>
+  <title>16x16 Color Grid Map (Array Version)</title>
   <style>
     #grid { display: grid; grid-template-columns: repeat(16, 24px); gap: 2px; }
     .cell {
@@ -20,41 +20,40 @@
   </style>
 </head>
 <body>
-  <h2>16x16 Color Grid Map</h2>
+  <h2>16x16 Color Grid Map (Array Version)</h2>
   <div id="grid"></div>
-  <button onclick="getMap()">Export Map</button>
-  <pre id="output"></pre>
   <script>
+    // You can edit this array directly!
+    const mapArray = [
+      ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"],
+      ["G","R","R","R","R","R","R","R","R","R","R","R","R","R","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"]
+    ];
+    
     const COLORS = ['G', 'R', 'B', 'Y', 'O', 'W', 'K', 'P'];
-    const size = 16;
-
-    // Create grid
     const grid = document.getElementById('grid');
-    for (let i = 0; i < size * size; i++) {
-      const input = document.createElement('input');
-      input.maxLength = 1;
-      input.className = 'cell';
-      input.addEventListener('input', function() {
-        const val = input.value.toUpperCase();
-        input.value = val;
-        input.className = 'cell ' + (COLORS.includes(val) ? val : '');
-      });
-      grid.appendChild(input);
-    }
-
-    // Export button: prints the grid as a 16x16 array of chars
-    function getMap() {
-      const cells = document.querySelectorAll('.cell');
-      let result = '';
-      for (let y = 0; y < size; y++) {
-        let row = [];
-        for (let x = 0; x < size; x++) {
-          const v = cells[y * size + x].value || ' ';
-          row.push(v);
-        }
-        result += row.join(' ') + '\n';
+    
+    for (let y = 0; y < 16; y++) {
+      for (let x = 0; x < 16; x++) {
+        const val = (mapArray[y] && mapArray[y][x]) ? mapArray[y][x] : '';
+        const cell = document.createElement('div');
+        cell.className = 'cell ' + (COLORS.includes(val) ? val : '');
+        cell.textContent = val;
+        grid.appendChild(cell);
       }
-      document.getElementById('output').textContent = result;
     }
   </script>
 </body>
