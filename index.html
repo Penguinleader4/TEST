@@ -2,27 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Isometric Grass Grid</title>
+  <title>Q*bert Pyramid Demo</title>
   <style>
     body {
-      background: #232323;
-      margin: 0;
-      padding: 40px 0;
+      background: #222;
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
     }
-    .iso-grid {
+    .pyramid {
       position: relative;
-      width: 480px; /* Adjust depending on grid size */
+      width: 500px;
       height: 320px;
-      margin: 0 auto;
     }
     .cube {
       position: absolute;
       width: 64px;
-      height: 32px;
+      height: 48px;
       transform-style: preserve-3d;
+      /* Optional shadow for 3D effect */
+      filter: drop-shadow(2px 4px 6px #000a);
     }
     /* Top face */
     .cube .top {
@@ -60,27 +60,26 @@
   </style>
 </head>
 <body>
-  <h2 style="color:#fff;">Isometric Grass Grid</h2>
-  <div class="iso-grid" id="iso-grid"></div>
+  <div class="pyramid" id="pyramid"></div>
   <script>
-    // 5x5 grid, single height grass
-    const rows = 5, cols = 5;
-    const blockWidth = 64, blockHeight = 32;
-    const grid = document.getElementById('iso-grid');
+    // Number of layers in the pyramid
+    const layers = 5;
+    const cubeW = 64, cubeH = 48, xStep = 32, yStep = 24;
+    const pyramid = document.getElementById('pyramid');
 
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < cols; x++) {
+    for (let layer = 0; layer < layers; layer++) {
+      for (let pos = 0; pos <= layer; pos++) {
         const cube = document.createElement('div');
         cube.className = 'cube';
-        // Isometric positioning
-        cube.style.left = (x - y) * (blockWidth / 2) + (cols * blockWidth / 2 - blockWidth / 2) + 'px';
-        cube.style.top = (x + y) * (blockHeight / 2) + 'px';
+        // Q*bert style: each new layer is offset diagonally
+        cube.style.left = (cubeW/2) * (layers - layer - 1) + xStep * pos + 'px';
+        cube.style.top  = yStep * layer + yStep * pos + 'px';
         cube.innerHTML = `
           <div class="top"></div>
           <div class="left"></div>
           <div class="right"></div>
         `;
-        grid.appendChild(cube);
+        pyramid.appendChild(cube);
       }
     }
   </script>
