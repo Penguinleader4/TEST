@@ -1,1 +1,36 @@
-<p>test</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Minecraft 16x16 Chunk Viewer</title>
+  <style>
+    #chunk { display: grid; grid-template-columns: repeat(16, 20px); }
+    .block { width: 20px; height: 20px; border: 1px solid #aaa; text-align: center; font-size: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Minecraft 16x16 Chunk Viewer</h1>
+  <textarea id="input" rows="16" cols="32" placeholder="Enter 16 lines of 16 block types (e.g. stone, grass, dirt)"></textarea>
+  <br />
+  <button onclick="renderChunk()">Show Chunk</button>
+  <div id="chunk"></div>
+  <script>
+    function renderChunk() {
+      const input = document.getElementById('input').value.trim().split('\n');
+      const chunk = document.getElementById('chunk');
+      chunk.innerHTML = '';
+      for (let y = 0; y < 16; y++) {
+        const row = (input[y] || '').trim().split(/\s+/);
+        for (let x = 0; x < 16; x++) {
+          const blockType = row[x] || '';
+          const block = document.createElement('div');
+          block.className = 'block';
+          block.textContent = blockType;
+          block.title = blockType;
+          chunk.appendChild(block);
+        }
+      }
+    }
+  </script>
+</body>
+</html>
