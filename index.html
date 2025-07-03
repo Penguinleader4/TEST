@@ -23,29 +23,30 @@
   <h2>16x16 Color Grid Map (Array Version)</h2>
   <div id="grid"></div>
   <script>
-    // You can edit this array directly!
+    // Example 16x16 grid array (you can change G/R/B/Y/O/W/K/P)
     const mapArray = [
       ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"],
       ["G","R","R","R","R","R","R","R","R","R","R","R","R","R","R","G"],
       ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","B","Y","Y","Y","Y","Y","Y","Y","Y","Y","Y","B","R","G"],
+      ["G","R","B","Y","O","O","O","O","O","O","O","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","W","W","W","W","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","K","K","K","K","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","K","P","P","K","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","K","P","P","K","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","K","K","K","K","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","W","W","W","W","W","W","O","Y","B","R","G"],
+      ["G","R","B","Y","O","O","O","O","O","O","O","O","Y","B","R","G"],
+      ["G","R","B","Y","Y","Y","Y","Y","Y","Y","Y","Y","Y","B","R","G"],
       ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
-      ["G","R","B","B","B","B","B","B","B","B","B","B","B","B","R","G"],
+      ["G","R","R","R","R","R","R","R","R","R","R","R","R","R","R","G"],
       ["G","G","G","G","G","G","G","G","G","G","G","G","G","G","G","G"]
     ];
-    
+
+    // Render grid
     const COLORS = ['G', 'R', 'B', 'Y', 'O', 'W', 'K', 'P'];
     const grid = document.getElementById('grid');
-    
+
     for (let y = 0; y < 16; y++) {
       for (let x = 0; x < 16; x++) {
         const val = (mapArray[y] && mapArray[y][x]) ? mapArray[y][x] : '';
