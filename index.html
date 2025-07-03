@@ -4,22 +4,23 @@
   <meta charset="UTF-8">
   <title>16x16 Color Grid Map (Squares Only)</title>
   <style>
-    #grid { display: grid; grid-template-columns: repeat(16, 24px); gap: 2px; }
-    .cell {
-      width: 24px; height: 24px;
-      border: 1px solid #888; background: #eee;
-      /* Remove text alignment and font settings since no letters */
-    }
-    .G { background: #28c940; } /* Green */
-    .R { background: #e74c3c; } /* Red */
-    .B { background: #3498db; } /* Blue */
-    .Y { background: #f9e79f; } /* Yellow */
-    .O { background: #f39c12; } /* Orange */
-    .W { background: #fff;     } /* White */
-    .K { background: #222;     } /* Black */
-    .P { background: #9b59b6; } /* Purple */
-    .Gr { background: #5c5c5c; } /* Gray */
-  </style>
+  #grid { display: grid; grid-template-columns: repeat(16, 24px); gap: 0; }
+  .cell {
+    width: 24px; height: 24px;
+    border: none; outline: none;
+    margin: 0; padding: 0;
+    background: #eee;
+  }
+  .G { background: #28c940; } /* Green */
+  .R { background: #e74c3c; } /* Red */
+  .B { background: #3498db; } /* Blue */
+  .Y { background: #f9e79f; } /* Yellow */
+  .O { background: #f39c12; } /* Orange */
+  .W { background: #fff;     } /* White */
+  .K { background: #222;     } /* Black */
+  .P { background: #9b59b6; } /* Purple */
+  .Gr { background: #5c5c5c; } /* Gray */
+</style>
 </head>
 <body>
   <h2>16x16 Color Grid Map (Squares Only)</h2>
