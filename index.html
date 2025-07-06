@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bluemap-style Chunk (WebGL)</title>
+  <title>Bluemap-style Chunk with Height (WebGL)</title>
   <style>
     body { background: #181818; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
     canvas { display: block; }
   </style>
 </head>
 <body>
-<canvas id="glcanvas" width="600" height="400"></canvas>
+<canvas id="glcanvas" width="700" height="500"></canvas>
 <script>
 const chunkSize = 8;
+const maxHeight = 5;
 
 const vertexShaderSource = `
 attribute vec4 position;
@@ -50,8 +51,6 @@ function createProgram(gl, vsSource, fsSource) {
 }
 
 function getCubeGeometry(size=1) {
-  // Returns [positions array, colors array, indices array]
-  // 8 corners, 6 faces (2 triangles each)
   const s = size/2;
   const positions = [
     // Front face
@@ -169,7 +168,6 @@ if (!gl) alert('WebGL not supported');
 const program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
 gl.useProgram(program);
 
-// --- Create cube geometry ---
 const [positions, colors, indices] = getCubeGeometry();
 
 const posBuffer = gl.createBuffer();
@@ -184,12 +182,10 @@ const idxBuffer = gl.createBuffer();
 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuffer);
 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-// --- Attribute locations ---
 const posLoc = gl.getAttribLocation(program, "position");
 const colLoc = gl.getAttribLocation(program, "color");
 const mvpLoc = gl.getUniformLocation(program, "mvp");
 
-// --- Camera setup ---
 const aspect = canvas.width / canvas.height;
 const proj = new Float32Array(16);
 perspective(proj, Math.PI/4, aspect, 0.1, 100);
@@ -198,37 +194,44 @@ lookAt(view, [10,15,20], [0,0,0], [0,1,0]);
 const pv = new Float32Array(16);
 multiply(pv, proj, view);
 
-// --- Render ---
 gl.enable(gl.DEPTH_TEST);
 gl.clearColor(0.10, 0.12, 0.12, 1);
+
+// --- Generate random heights for each (x,z) column ---
+const heights = [];
+for(let x=0;x<chunkSize;++x) {
+  heights[x] = [];
+  for(let z=0;z<chunkSize;++z) {
+    heights[x][z] = 1 + Math.floor(Math.random() * maxHeight);
+  }
+}
 
 function drawScene() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  // Draw one chunk: 8x8 cubes
   for(let x=0;x<chunkSize;++x) {
     for(let z=0;z<chunkSize;++z) {
-      let model = new Float32Array(16);
-      identity(model);
-      translate(model, model, [(x-chunkSize/2)*1.2, -0.5, (z-chunkSize/2)*1.2]);
-      // Isometric rotation (Bluemap-like)
-      rotateY(model, model, Math.PI/4);
-      rotateX(model, model, Math.atan(1/Math.sqrt(2)));
-      let mvp = new Float32Array(16);
-      multiply(mvp, pv, model);
-      gl.uniformMatrix4fv(mvpLoc, false, mvp);
+      for(let y=0;y<heights[x][z];++y) {
+        let model = new Float32Array(16);
+        identity(model);
+        translate(model, model, [(x-chunkSize/2)*1.2, y-0.5, (z-chunkSize/2)*1.2]);
+        rotateY(model, model, Math.PI/4);
+        rotateX(model, model, Math.atan(1/Math.sqrt(2)));
+        let mvp = new Float32Array(16);
+        multiply(mvp, pv, model);
+        gl.uniformMatrix4fv(mvpLoc, false, mvp);
 
-      // Set attributes
-      gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-      gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(posLoc);
+        gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+        gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(posLoc);
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
-      gl.vertexAttribPointer(colLoc, 4, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(colLoc);
+        gl.bindBuffer(gl.ARRAY_BUFFER, colBuffer);
+        gl.vertexAttribPointer(colLoc, 4, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(colLoc);
 
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuffer);
-      gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, idxBuffer);
+        gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+      }
     }
   }
 }
