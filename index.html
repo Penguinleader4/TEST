@@ -18,6 +18,7 @@
       pointer-events: none;
       transform: translate(-50%, -50%);
       box-shadow: 0 0 8px #000a;
+      z-index: 2;
     }
     .answer-marker {
       background: #0cf !important;
@@ -30,7 +31,7 @@
       border-radius: 6px;
       padding: 2px 6px;
       pointer-events: none;
-      z-index: 2;
+      z-index: 3;
       left: 10px;
       top: 10px;
       display: none;
@@ -63,6 +64,7 @@
     <div id="instructions" style="margin-top:24px; text-align:center;">
       <strong>How to play:</strong> <br>
       Look at the Minecraft screenshot above.<br>
+      Move your mouse over the map to see pixel coordinates.<br>
       Click on the map where you think the screenshot was taken.<br>
       Try to get as close as possible for maximum points!
     </div>
@@ -121,9 +123,22 @@
     }
 
     function showDebugCoords(x, y) {
-      debugCoords.textContent = `You clicked: (${x}, ${y})`;
+      debugCoords.textContent = `Mouse: (${x}, ${y})`;
       debugCoords.style.display = 'block';
     }
+
+    // Show mouse pixel coordinates live
+    mapImg.addEventListener('mousemove', function(e) {
+      const rect = mapImg.getBoundingClientRect();
+      const x = Math.round(e.clientX - rect.left);
+      const y = Math.round(e.clientY - rect.top);
+      showDebugCoords(x, y);
+    });
+
+    // Hide pixel coordinates when mouse leaves map
+    mapImg.addEventListener('mouseleave', function() {
+      debugCoords.style.display = 'none';
+    });
 
     function handleGuess(e) {
       if (guessed) return;
@@ -134,7 +149,7 @@
       lastGuess.y = y;
       showMarker(guessMarker, x, y);
 
-      // Always show debug coordinates
+      // Always show debug coordinates (on click, stays visible)
       showDebugCoords(x, y);
 
       // Calculate distance to answer
