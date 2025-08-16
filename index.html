@@ -19,6 +19,9 @@
       transform: translate(-50%, -50%);
       box-shadow: 0 0 8px #000a;
     }
+    .answer-marker {
+      background: #0cf !important;
+    }
     .debug-coords {
       position: absolute;
       background: rgba(0,0,0,0.7);
@@ -45,13 +48,8 @@
       <div class="map-container" id="map-container" style="max-width: 600px;">
         <img id="map-img" class="map-img" src="" alt="Server Map">
         <div id="guess-marker" class="marker" style="display:none;"></div>
-        <div id="answer-marker" class="marker" style="background:#0cf; display:none;"></div>
+        <div id="answer-marker" class="marker answer-marker" style="display:none;"></div>
         <div id="debug-coords" class="debug-coords"></div>
-      </div>
-      <div style="text-align:right; margin-bottom:6px;">
-        <label>
-          <input type="checkbox" id="debugMode"> Debug Mode
-        </label>
       </div>
       <div class="scoreboard">
         <span id="round-info"></span> | Score: <span id="score">0</span>
@@ -90,13 +88,11 @@
     let currentRound = 0;
     let score = 0;
     let guessed = false;
-    let debugMode = false;
     let lastGuess = { x: null, y: null };
 
     // DOM elements
     const screenshot = document.getElementById('screenshot');
     const mapImg = document.getElementById('map-img');
-    const mapContainer = document.getElementById('map-container');
     const guessMarker = document.getElementById('guess-marker');
     const answerMarker = document.getElementById('answer-marker');
     const roundInfo = document.getElementById('round-info');
@@ -104,7 +100,6 @@
     const results = document.getElementById('results');
     const nextBtn = document.getElementById('next-btn');
     const restartBtn = document.getElementById('restart-btn');
-    const debugCheckbox = document.getElementById('debugMode');
     const debugCoords = document.getElementById('debug-coords');
 
     function loadRound() {
@@ -127,10 +122,7 @@
 
     function showDebugCoords(x, y) {
       debugCoords.textContent = `You clicked: (${x}, ${y})`;
-      debugCoords.style.display = debugMode ? 'block' : 'none';
-      // Place near the click if you want, or just keep at top-left
-      // debugCoords.style.left = (x + 20) + "px";
-      // debugCoords.style.top = (y - 10) + "px";
+      debugCoords.style.display = 'block';
     }
 
     function handleGuess(e) {
@@ -141,7 +133,9 @@
       lastGuess.x = x;
       lastGuess.y = y;
       showMarker(guessMarker, x, y);
-      if (debugMode) showDebugCoords(x, y);
+
+      // Always show debug coordinates
+      showDebugCoords(x, y);
 
       // Calculate distance to answer
       const answer = rounds[currentRound].answer;
@@ -181,15 +175,6 @@
       loadRound();
       restartBtn.style.display = 'none';
     };
-
-    debugCheckbox.addEventListener('change', function() {
-      debugMode = debugCheckbox.checked;
-      if (debugMode && lastGuess.x !== null && lastGuess.y !== null) {
-        showDebugCoords(lastGuess.x, lastGuess.y);
-      } else {
-        debugCoords.style.display = 'none';
-      }
-    });
 
     // Start
     loadRound();
