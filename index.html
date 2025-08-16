@@ -2,138 +2,153 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>GeoGuessr Single Image Demo</title>
+  <title>Minecraft GeoGuessr</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      background: #181818;
-      margin: 0;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      gap: 40px;
-    }
-    #image-area, #map-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #main-img, #map-img {
-      border: 2px solid #555;
-      border-radius: 10px;
-      background: #222;
-    }
-    #map-img {
-      cursor: crosshair;
-    }
-    .marker, .guess-marker {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      background-size: contain;
-      pointer-events: none;
-      transform: translate(-12px, -24px);
-    }
+    body { font-family: Arial, sans-serif; background: #222; color: #eee; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 40px auto; background: #333; padding: 24px; border-radius: 12px; }
+    h1 { text-align: center; }
+    .screenshot { width: 100%; border-radius: 8px; margin-bottom: 16px; }
+    .map-container { position: relative; display: inline-block; }
+    .map-img { width: 100%; border-radius: 8px; cursor: crosshair; }
     .marker {
-      background: url('https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg') center center no-repeat;
-      opacity: 0.8;
-      z-index: 2;
+      position: absolute;
+      width: 22px; height: 22px;
+      background: #f00; border: 2px solid #fff; border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px #000a;
     }
-    .guess-marker {
-      background: url('https://upload.wikimedia.org/wikipedia/commons/0/0d/BlueDot.svg') center center no-repeat;
-      opacity: 0.8;
-      z-index: 3;
-    }
-    #map-container {
-      position: relative;
-      display: inline-block;
-    }
-    label {
-      color: #eee;
-      margin-bottom: 8px;
-    }
-    #coords, #guess-coords {
-      color: #eee;
-      margin-top: 10px;
-    }
-    #distance {
-      color: #f8e800;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    .scoreboard, .results { margin-top: 20px; text-align: center; font-size: 1.2em; }
+    button { padding: 8px 16px; font-size: 1em; border: none; border-radius: 6px; background: #3c7; color: #fff; margin: 12px 6px; cursor: pointer; }
+    button:disabled { background: #999; cursor: not-allowed; }
   </style>
 </head>
 <body>
-  <div id="image-area">
-    <label>Guess the location for this image:</label>
-    <img id="main-img"
-      src="https://cdn.discordapp.com/attachments/1193363353893093376/1406389283765616640/image.png?ex=68a24996&is=68a0f816&hm=111025e3954ce07ffb83b4f056cb05cf8795f8d44b6d22d54a5f83232425b130&"
-      alt="Main image" width="400">
-  </div>
-  <div id="map-area">
-    <label>Map (Click to guess the location)</label>
-    <div id="map-container">
-      <img id="map-img"
-        src="https://cdn.discordapp.com/attachments/940770768365694986/1403905625364369449/Prueba.png?ex=68a1d240&is=68a080c0&hm=ac1aa0f8df4a1cbf6cc1f8f3b70c21deedca94529d5cc8384e1ae356c2d02b75&"
-        alt="Map" width="400">
-      <!-- Markers will be inserted here -->
+  <div class="container">
+    <h1>Minecraft GeoGuessr</h1>
+    <div id="game">
+      <img id="screenshot" class="screenshot" src="" alt="Location Screenshot">
+      <div class="map-container" id="map-container" style="max-width: 600px;">
+        <img id="map-img" class="map-img" src="" alt="Server Map">
+        <div id="guess-marker" class="marker" style="display:none;"></div>
+        <div id="answer-marker" class="marker" style="background:#0cf; display:none;"></div>
+      </div>
+      <div class="scoreboard">
+        <span id="round-info"></span> | Score: <span id="score">0</span>
+      </div>
+      <div class="results" id="results"></div>
+      <div style="text-align:center;">
+        <button id="next-btn" style="display:none;">Next Round</button>
+        <button id="restart-btn" style="display:none;">Restart Game</button>
+      </div>
     </div>
-    <div id="coords"></div>
-    <div id="guess-coords"></div>
-    <div id="distance"></div>
+    <div id="instructions" style="margin-top:24px; text-align:center;">
+      <strong>How to play:</strong> <br>
+      Look at the Minecraft screenshot above.<br>
+      Click on the map where you think the screenshot was taken.<br>
+      Try to get as close as possible for maximum points!
+    </div>
   </div>
-  <script>
-    // Set the CORRECT area coordinates here:
-    const correctX = 120;  // <-- Change as needed!
-    const correctY = 200;  // <-- Change as needed!
 
-    // DOM
+  <script>
+    // Example round data -- replace with your own images and correct coordinates!
+    const rounds = [
+      {
+        screenshot: "https://cdn.discordapp.com/attachments/1193363353893093376/1406389283765616640/image.png",
+        map: "https://cdn.discordapp.com/attachments/940770768365694986/1403905625364369449/Prueba.png",
+        answer: { x: 356, y: 212 }
+      },
+      {
+        screenshot: "https://cdn.discordapp.com/attachments/1193363353893093376/1406390261280223302/different_image.png",
+        map: "https://cdn.discordapp.com/attachments/940770768365694986/1403905625364369449/Prueba.png",
+        answer: { x: 150, y: 380 }
+      },
+      // Add more rounds here!
+    ];
+
+    // Game state
+    let currentRound = 0;
+    let score = 0;
+    let guessed = false;
+
+    // DOM elements
+    const screenshot = document.getElementById('screenshot');
     const mapImg = document.getElementById('map-img');
     const mapContainer = document.getElementById('map-container');
-    const coordsDiv = document.getElementById('coords');
-    const guessCoordsDiv = document.getElementById('guess-coords');
-    const distanceDiv = document.getElementById('distance');
-    let marker, guessMarker;
+    const guessMarker = document.getElementById('guess-marker');
+    const answerMarker = document.getElementById('answer-marker');
+    const roundInfo = document.getElementById('round-info');
+    const scoreSpan = document.getElementById('score');
+    const results = document.getElementById('results');
+    const nextBtn = document.getElementById('next-btn');
+    const restartBtn = document.getElementById('restart-btn');
 
-    // Place the correct marker on load
-    function placeCorrectMarker(x, y) {
-      if (marker) marker.remove();
-      marker = document.createElement('div');
-      marker.className = 'marker';
-      marker.style.left = `${x}px`;
-      marker.style.top = `${y}px`;
-      mapContainer.appendChild(marker);
-      coordsDiv.textContent = `Correct location: (${Math.round(x)}, ${Math.round(y)})`;
+    function loadRound() {
+      guessed = false;
+      results.textContent = '';
+      nextBtn.style.display = 'none';
+      answerMarker.style.display = 'none';
+      guessMarker.style.display = 'none';
+      screenshot.src = rounds[currentRound].screenshot;
+      mapImg.src = rounds[currentRound].map;
+      roundInfo.textContent = `Round ${currentRound + 1} / ${rounds.length}`;
     }
 
-    // Place user's guess marker
-    function placeGuessMarker(x, y) {
-      if (guessMarker) guessMarker.remove();
-      guessMarker = document.createElement('div');
-      guessMarker.className = 'guess-marker';
-      guessMarker.style.left = `${x}px`;
-      guessMarker.style.top = `${y}px`;
-      mapContainer.appendChild(guessMarker);
-      guessCoordsDiv.textContent = `Your guess: (${Math.round(x)}, ${Math.round(y)})`;
-
-      // Calculate distance to correct spot
-      const dx = x - correctX;
-      const dy = y - correctY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      distanceDiv.textContent = `Distance from correct location: ${Math.round(dist)} pixels`;
+    function showMarker(marker, x, y) {
+      marker.style.left = x + "px";
+      marker.style.top = y + "px";
+      marker.style.display = "block";
     }
 
-    // Initial marker
-    placeCorrectMarker(correctX, correctY);
-
-    // Listen for guesses
-    mapImg.addEventListener('click', function(e) {
+    function handleGuess(e) {
+      if (guessed) return;
       const rect = mapImg.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      placeGuessMarker(x, y);
-    });
+      const x = Math.round(e.clientX - rect.left);
+      const y = Math.round(e.clientY - rect.top);
+      showMarker(guessMarker, x, y);
+
+      // Calculate distance to answer
+      const answer = rounds[currentRound].answer;
+      showMarker(answerMarker, answer.x, answer.y);
+      answerMarker.style.display = "block";
+      const dx = x - answer.x;
+      const dy = y - answer.y;
+      const distance = Math.round(Math.sqrt(dx * dx + dy * dy));
+      let roundScore = Math.max(0, 500 - distance); // Out of 500, closer = better
+      score += roundScore;
+      scoreSpan.textContent = score;
+      results.textContent = `You were ${distance} pixels away! You scored ${roundScore} points.`;
+      guessed = true;
+
+      // Next or restart
+      if (currentRound < rounds.length - 1) {
+        nextBtn.style.display = 'inline-block';
+        restartBtn.style.display = 'none';
+      } else {
+        results.textContent += `\nGame over! Final score: ${score}`;
+        nextBtn.style.display = 'none';
+        restartBtn.style.display = 'inline-block';
+      }
+    }
+
+    mapImg.addEventListener('click', handleGuess);
+
+    nextBtn.onclick = function() {
+      currentRound++;
+      loadRound();
+    };
+
+    restartBtn.onclick = function() {
+      currentRound = 0;
+      score = 0;
+      scoreSpan.textContent = score;
+      loadRound();
+      restartBtn.style.display = 'none';
+    };
+
+    // Start
+    loadRound();
   </script>
 </body>
 </html>
