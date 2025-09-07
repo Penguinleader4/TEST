@@ -1,2 +1,2 @@
-# Santoria Guessr
+# Stoneworks guesser
 self explanatory.
